@@ -1,0 +1,38 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: zkp-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - zkp_net
+
+volumes:
+  mongo_data:
+
+networks:
+  zkp_net:
+    driver: bridge
+
+# Creazione rete
+## docker network create zkp_net
+
+# Start servizio
+## docker-compose -f docker-compose.yml up -d
+
+# Visualizza rete
+##docker zkp_net ls
+
+# Rimozione rete
+## docker network rm zkp_net
+
+# Stop
+## docker stop zkp-mongodb
+
+# Rimuovi (senza perdere i dati, volume rimane)
+## docker rm zkp-mongodb
+
+# Se vuoi rimuovere anche i dati:
+##docker volume rm zkp_mongo_data

@@ -1,0 +1,12 @@
+VictorCLI
+python victorCLI.py --listen
+python victorCLI.py --list-users
+python victorCLI.py --verify pippo
+
+AnthonyCLI
+python AnthonyCLI.py --mode active --listen-port 8081 --forward-port 8080
+
+PeggyCLI
+python PeggyCLI.py --key_size 64 --port 8080
+python PeggyCLI.py (default 64 key_bit_length)
+python PeggyCLI.py --key_size 256
