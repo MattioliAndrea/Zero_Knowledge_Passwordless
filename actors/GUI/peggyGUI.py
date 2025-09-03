@@ -39,37 +39,41 @@ with st.form("login_form"):
     submitted = st.form_submit_button("Procedi")
 
 if submitted and email and password:
-    st.session_state.email = email
-    st.session_state.password = password
-    stored = peggy.load_credentials(email)
-
-    if stored and peggy.verify_password(password, email):
-        st.success("🔓 Password verificata")
-        st.session_state.authenticated = True
-        st.session_state.devices = stored.get("devices", [])
-        del stored 
-                
-    elif action == "Registra nuovo dispositivo":
-            st.info("Registrazione nuovo dispositivo in corso...")
-            credentials = peggy.save_credentials(email, password,key_size)
-            print("[Peggy DEBUG] Credenziali salvate:", credentials)
-            st.success("📱 Dispositivo registrato con successo in locale")
-            
-            registration_msg = {
-                "type": "registration_request",
-                "user_id": email,
-                "public_key": credentials['public_key'],
-                "system_params": credentials['system_params']
-            }
-            server_response = next(peggy.communicate_with_server([registration_msg]))
-            if server_response['success']:
-                
-                st.success("📡 Dispositivo registrato anche su Victor")
-            else:
-                st.error(f"Errore nella registrazione: {server_response['message']}")
+    
+    if(action !="Login" and action!="Registra nuovo dispositivo"):
+        st.warning("⚠️ azione sconosciuta!")
     else:
-        st.warning("⚠️ Password errata o account non registrato.")
+        st.session_state.email = email
+        st.session_state.password = password
+        stored = peggy.load_credentials(email)
 
+
+        if stored and peggy.verify_password(password, email) and action == "Login":
+            st.success("🔓 Password verificata")
+            st.session_state.authenticated = True
+            st.session_state.devices = stored.get("devices", [])
+            del stored 
+                    
+        elif action == "Registra nuovo dispositivo":
+                st.info("Registrazione nuovo dispositivo in corso...")
+                credentials = peggy.save_credentials(email, password,key_size)
+                print("[Peggy DEBUG] Credenziali salvate:", credentials)
+                st.success("📱 Dispositivo registrato con successo in locale")
+                
+                registration_msg = {
+                    "type": "registration_request",
+                    "user_id": email,
+                    "public_key": credentials['public_key'],
+                    "system_params": credentials['system_params']
+                }
+                server_response = next(peggy.communicate_with_server([registration_msg]))
+                if server_response['success']:
+                    
+                    st.success("📡 Dispositivo registrato anche su Victor")
+                else:
+                    st.error(f"Errore nella registrazione: {server_response['message']}")
+        else:
+            st.warning("⚠️ Password errata o account non registrato.")
 
 # Mostra selectbox solo se login + dispositivi ≥ 1
 if st.session_state.authenticated and action == "Login" and len(st.session_state.devices) >= 1:
