@@ -8,7 +8,7 @@ from libs.zkp_core import ZKPCore
 
 SERVER_HOST = "localhost"
 SERVER_PORT = 8080  # Anthony ascolta qui
-CRACKED_FOLDER = "Cracked_key"
+CRACKED_FOLDER = "Cracked_Key"
 
 def load_cracked_keys():
     credentials = []
